@@ -7,11 +7,24 @@ Find a shortest (possibly non-unique) superstring that contains all the given su
 For example: ["suit","case","it"] -> "suitcase" (and also "casesuit")
              ["suit","case","it","suitcase"] -> "suitcase" (now unique)
 """
-
+import sys
+import math
+import itertools
 
 def minSuperstring(wordList):
-    # TODO: Write me!
-    pass
+    l=[] # List of superstrings...
+    for p in itertools.permutations(wordList): # For any permutation of the word list
+        i=iter(p) # Iterate in the words in that order
+        candidate=next(i) # They will be added to this superstring (which is a candidate to scs)
+        for w in i:
+            if w in candidate: # If the word is in the candidate... need to do nothing!
+                pass
+            else:
+                # Add the word from the left, in the position producing maximum overlapping
+                bestPos=max(j*(candidate[:j] == w[-j:]) for j in range(len(w)))
+                candidate=w+candidate[bestPos:]
+        l.append(candidate)
+    return min(l,key=len) # The shortest must be the scs
 
 def minSuperstringCheck(self,wordList, length):
     minSuper=minSuperstring(wordList)
